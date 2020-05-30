@@ -6,3 +6,7 @@ Download ubuntu 20.04 rapberry pi here:
 
 https://ubuntu.com/download/raspberry-pi
 
+Flash to micro SD Card
+
+
+
