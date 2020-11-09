@@ -12,14 +12,47 @@ services:
       - UMASK_SET=022 #optional
       - PLEX_CLAIM= #optional
     volumes:
-      - /media/usbdisk/music:/music
-      - /media/usbdisk/movies:/movies
-      - /home/ubuntu/tv:/tv
-      - /media/usbdisk/HomeMovies:/HomeMovies
-      - /media/usbdisk/config:/config
+      - /media/terabyte/music:/music
+      - /media/terabyte/movies:/movies
+      - /media/terabyte/photos:/photos
+      - /media/terabyte/tv:/tv
+      - /media/terabyte/videos:/HomeMovies
+      - /media/terabyte/workout:/Workout
+      - /media/terabyte/config:/config
     restart: unless-stopped
-  api:
-    image: api
-    container_name: api
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    environment:
+      TZ: 'America/Los_Angeles'
+      # WEBPASSWORD: 'set a secure password here or it will be random'
+    # Volumes store your data between container upgrades
+    volumes:
+      - './etc-pihole/:/etc/pihole/'
+      - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    # Recommended but not required (DHCP needs NET_ADMIN)
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+
+  homeassistant:
+    container_name: homeassistant
+    image: homeassistant/raspberrypi4-homeassistant:stable
     network_mode: host
-    restart: unless-stopped
+    environment:
+      - TZ=America/Los_Angeles
+    ports:
+      - "8123:8123/tcp"
+    volumes:
+      - /media/terabyte/homeassistant:/config
