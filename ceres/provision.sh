@@ -28,3 +28,8 @@ export PATH=~/.local/bin:$PATH
 # lxde themes, run lxappearance to change themes
 
 sudo apt install arc-theme papirus-icon-theme breeze-cursor-theme
+
+
+# conky
+
+sudo apt-get install conky -y
